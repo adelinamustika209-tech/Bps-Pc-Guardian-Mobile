@@ -5,6 +5,7 @@ import '../services/auth_service.dart';
 import 'admin_dashboard.dart';
 import 'dashboard_page.dart';
 import 'technician_dashboard.dart';
+import 'user_dashboard.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -21,8 +22,10 @@ class LoginPage extends StatelessWidget {
             padding: const EdgeInsets.all(32.0),
             child: Stack(
               children: [
-                Center(
+                Align(
+                  alignment: const Alignment(0, -0.3),
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
@@ -239,12 +242,12 @@ class _LoginFormState extends State<LoginForm> {
           ),
         ),
         const SizedBox(height: 24),
-        DropdownButtonFormField<String>(
-          value: _selectedRole,
-          hint: const Text('-- Pilih Role Aktif --'),
-          icon: const Icon(Icons.keyboard_arrow_down),
-          decoration: InputDecoration(
-            labelText: 'Masuk Sebagai',
+        DropdownMenu<String>(
+          initialSelection: _selectedRole,
+          hintText: '-- Pilih Role Aktif --',
+          label: const Text('Masuk Sebagai'),
+          expandedInsets: EdgeInsets.zero,
+          inputDecorationTheme: InputDecorationTheme(
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: Colors.grey.shade300),
@@ -260,10 +263,10 @@ class _LoginFormState extends State<LoginForm> {
             filled: true,
             fillColor: Colors.grey.shade50,
           ),
-          items: _roles.map((role) {
-            return DropdownMenuItem<String>(value: role, child: Text(role));
+          dropdownMenuEntries: _roles.map((role) {
+            return DropdownMenuEntry<String>(value: role, label: role);
           }).toList(),
-          onChanged: (value) {
+          onSelected: (value) {
             setState(() {
               _selectedRole = value;
             });
@@ -351,6 +354,13 @@ class _LoginFormState extends State<LoginForm> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => const TechnicianDashboardPage(),
+                  ),
+                );
+              } else if (_selectedRole == 'User') {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const UserDashboardPage(),
                   ),
                 );
               } else {
