@@ -17,76 +17,72 @@ class LoginPage extends StatelessWidget {
         builder: (context, constraints) {
           final bool isDesktop = constraints.maxWidth > 800;
 
-          Widget leftSection = Container(
-            color: const Color(0xFF00558D),
-            padding: const EdgeInsets.all(32.0),
-            child: Stack(
-              children: [
-                Align(
-                  alignment: const Alignment(0, -0.3),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 120,
-                        height: 120,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: const Color(0xFFF39200),
-                            width: 4.0,
-                          ),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            'BPS',
-                            style: TextStyle(
-                              fontSize: 36,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF00558D),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: isDesktop ? 32 : 24),
-                      Text(
-                        'BPS-PC Guardian',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.inter(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(height: isDesktop ? 16 : 4),
-                      Text(
-                        'Sistem Monitoring Terpadu Aset Komputer\nBadan Pusat Statistik (BPS) Provinsi Sulawesi Selatan.',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.inter(
-                          fontSize: 16,
-                          color: Colors.white.withOpacity(0.9),
-                          height: 1.5,
-                        ),
-                      ),
-                    ],
+          Widget leftContentBody = Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: const Color(0xFFF39200),
+                    width: 4.0,
                   ),
                 ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
+                child: const Center(
                   child: Text(
-                    '© 2026 BPS Sulsel',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      color: Colors.white70,
+                    'BPS',
+                    style: TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF00558D),
                     ),
                   ),
                 ),
-              ],
+              ),
+              SizedBox(height: isDesktop ? 32 : 24),
+              Text(
+                'BPS-PC Guardian',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.inter(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(height: isDesktop ? 16 : 4),
+              Text(
+                'Sistem Monitoring Terpadu Aset Komputer\nBadan Pusat Statistik (BPS) Provinsi Sulawesi Selatan.',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.inter(
+                  fontSize: 16,
+                  color: Colors.white.withOpacity(0.9),
+                  height: 1.5,
+                ),
+              ),
+              const SizedBox(height: 32),
+              Text(
+                '© 2026 BPS Sulsel',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.inter(
+                  fontSize: 12,
+                  color: Colors.white70,
+                ),
+              ),
+            ],
+          );
+
+          Widget leftSection = Container(
+            color: const Color(0xFF00558D),
+            padding: const EdgeInsets.all(32.0),
+            child: SafeArea(
+              bottom: false,
+              child: isDesktop
+                  ? Center(child: SingleChildScrollView(child: leftContentBody))
+                  : leftContentBody,
             ),
           );
 
@@ -115,7 +111,6 @@ class LoginPage extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(
-                    height: 350,
                     width: double.infinity,
                     child: leftSection,
                   ),
@@ -273,10 +268,13 @@ class _LoginFormState extends State<LoginForm> {
           },
         ),
         const SizedBox(height: 24),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          runSpacing: 8,
           children: [
             Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(
                   width: 24,
