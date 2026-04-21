@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../services/auth_service.dart';
 import 'admin_dashboard.dart';
 import 'dashboard_page.dart';
+import 'reset_password_page.dart';
 import 'technician_dashboard.dart';
 import 'user_dashboard.dart';
 
@@ -303,7 +304,14 @@ class _LoginFormState extends State<LoginForm> {
               ],
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ResetPasswordPage(),
+                  ),
+                );
+              },
               style: TextButton.styleFrom(
                 padding: EdgeInsets.zero,
                 minimumSize: const Size(50, 30),
@@ -322,7 +330,7 @@ class _LoginFormState extends State<LoginForm> {
         ),
         const SizedBox(height: 40),
         ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
             if (_selectedRole == null) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Pilih Role terlebih dahulu!')),
@@ -333,13 +341,26 @@ class _LoginFormState extends State<LoginForm> {
             final email = _emailController.text.trim();
             final password = _passwordController.text;
 
-            final loginResult = AuthService.verifyLogin(
+            // Tampilkan loading indicator di sini (opsional)
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => const Center(child: CircularProgressIndicator()),
+            );
+
+            final loginResult = await AuthService.verifyLogin(
               email,
               password,
               _selectedRole!,
             );
 
+            // Tutup loading indicator
+            if (context.mounted) {
+              Navigator.pop(context);
+            }
+
             if (loginResult == true) {
+              if (!context.mounted) return;
               if (_selectedRole == 'Admin') {
                 Navigator.pushReplacement(
                   context,
@@ -370,9 +391,11 @@ class _LoginFormState extends State<LoginForm> {
                 );
               }
             } else {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(loginResult.toString())));
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(loginResult.toString())),
+                );
+              }
             }
           },
           style: ElevatedButton.styleFrom(

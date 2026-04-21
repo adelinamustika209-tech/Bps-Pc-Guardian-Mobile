@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../services/auth_service.dart';
 
 class ResetPasswordPage extends StatefulWidget {
   const ResetPasswordPage({super.key});
@@ -139,7 +140,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   ),
                   const SizedBox(height: 40),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_emailController.text.isEmpty ||
                           _newPasswordController.text.isEmpty ||
                           _confirmPasswordController.text.isEmpty) {
@@ -163,15 +164,41 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                         return;
                       }
 
-                      // Simulasi proses simpan password
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Password berhasil direset!'),
-                          backgroundColor: Colors.green,
-                        ),
+                      final email = _emailController.text.trim();
+                      final newPassword = _newPasswordController.text;
+
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) => const Center(child: CircularProgressIndicator()),
                       );
-                      // Kembali ke halaman login
-                      Navigator.pop(context);
+
+                      final result = await AuthService.resetPassword(email, newPassword);
+
+                      if (context.mounted) {
+                        Navigator.pop(context); // Tutup loading
+                      }
+
+                      if (result == true) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Password berhasil direset! Silakan login dengan password baru.'),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                          Navigator.pop(context);
+                        }
+                      } else {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(result.toString()),
+                              backgroundColor: Colors.redAccent,
+                            ),
+                          );
+                        }
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF00558D),
