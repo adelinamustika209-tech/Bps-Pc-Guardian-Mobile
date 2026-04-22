@@ -23,8 +23,8 @@ try {
         exit;
     }
 
-    // Update password
-    $updateStmt = $pdo->prepare('UPDATE users SET password = ? WHERE email = ?');
+    // Update password dengan fungsi hash bawaan database
+    $updateStmt = $pdo->prepare('UPDATE users SET password = SHA2(?, 256) WHERE email = ?');
     $updateStmt->execute([$newPassword, $email]);
 
     echo json_encode(["status" => "success", "message" => "Password berhasil direset."]);

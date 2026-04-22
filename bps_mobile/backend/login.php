@@ -32,7 +32,8 @@ try {
     foreach ($results as $row) {
         if ($row['email'] === $email) {
             $emailFound = true;
-            if ($row['password'] === $password) {
+            // Cek password: bisa berupa teks biasa (default) ATAU hash (jika sudah direset)
+            if ($row['password'] === $password || hash('sha256', $password) === $row['password']) {
                 $passwordMatch = true;
             }
             break; // Berhenti mencari jika email cocok
