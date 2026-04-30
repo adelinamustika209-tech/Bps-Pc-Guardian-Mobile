@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'login_page.dart';
+import 'profile_page.dart';
 
 class TechnicianDashboardPage extends StatefulWidget {
   const TechnicianDashboardPage({super.key});
@@ -60,9 +61,11 @@ class _TechnicianDashboardPageState extends State<TechnicianDashboardPage> {
           const SizedBox(width: 8),
         ],
       ),
-      body: Container(
-        color: Colors.grey[100],
-        child: SingleChildScrollView(
+      body: _selectedIndex == 4
+          ? const ProfilePage()
+          : Container(
+              color: Colors.grey[100],
+              child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

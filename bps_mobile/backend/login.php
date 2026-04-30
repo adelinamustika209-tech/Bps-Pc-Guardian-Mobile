@@ -16,7 +16,7 @@ if (empty($email) || empty($password) || empty($role)) {
 
 try {
     // Mengecek apakah ada pengguna dengan role tersebut
-    $stmt = $pdo->prepare('SELECT email, password FROM users WHERE role = ?');
+    $stmt = $pdo->prepare('SELECT id, email, password, name, phone, nip FROM users WHERE role = ?');
     $stmt->execute([$role]);
     $results = $stmt->fetchAll();
 
@@ -28,6 +28,8 @@ try {
     $emailFound = false;
     $passwordMatch = false;
 
+    $userData = null;
+
     // Verifikasi berdasarkan logika yang sama di Flutter sebelumnya
     foreach ($results as $row) {
         if ($row['email'] === $email) {
@@ -35,6 +37,7 @@ try {
             // Cek password: bisa berupa teks biasa (default) ATAU hash (jika sudah direset)
             if ($row['password'] === $password || hash('sha256', $password) === $row['password']) {
                 $passwordMatch = true;
+                $userData = $row;
             }
             break; // Berhenti mencari jika email cocok
         }
@@ -50,7 +53,18 @@ try {
         exit;
     }
 
-    echo json_encode(["status" => "success", "message" => "Login berhasil."]);
+    echo json_encode([
+        "status" => "success", 
+        "message" => "Login berhasil.",
+        "user" => [
+            "id" => $userData['id'],
+            "email" => $userData['email'],
+            "role" => $role,
+            "name" => $userData['name'] ?? '',
+            "phone" => $userData['phone'] ?? '',
+            "nip" => $userData['nip'] ?? ''
+        ]
+    ]);
 
 } catch (\PDOException $e) {
     echo json_encode(["status" => "error", "message" => "Gagal mengeksekusi query. Detail: " . $e->getMessage()]);

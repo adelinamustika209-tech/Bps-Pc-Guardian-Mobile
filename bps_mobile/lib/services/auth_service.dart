@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   // Ganti baseUrl ini sesuai dengan lokasi tempat Anda menaruh folder backend di htdocs
@@ -28,6 +29,15 @@ class AuthService {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         if (data['status'] == 'success') {
+          final user = data['user'];
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('user_id', user['id'].toString());
+          await prefs.setString('user_email', user['email']);
+          await prefs.setString('user_role', user['role']);
+          await prefs.setString('user_name', user['name'] ?? '');
+          await prefs.setString('user_phone', user['phone'] ?? '');
+          await prefs.setString('user_nip', user['nip'] ?? '');
+
           return true; // Login success
         } else {
           return data['message']; // Pesan error dari backend (contoh: "Password salah")

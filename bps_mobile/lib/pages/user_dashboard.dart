@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'login_page.dart';
+import 'profile_page.dart';
 
 class UserDashboardPage extends StatefulWidget {
   const UserDashboardPage({super.key});
@@ -71,8 +72,10 @@ class _UserDashboardPageState extends State<UserDashboardPage> {
           const SizedBox(width: 8),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
+      body: _selectedIndex == 3
+          ? const ProfilePage()
+          : SingleChildScrollView(
+              child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Blue header background part
